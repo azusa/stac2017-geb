@@ -2,7 +2,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 ext {
     // The drivers we want to use
-    drivers = ["firefox", "chrome", "phantomJs"]
+    drivers = ["firefox", "chrome", "phantomJs", "edge", "ie"]
 
     ext {
         groovyVersion = '2.4.8'
@@ -23,11 +23,6 @@ repositories {
 }
 
 dependencies {
-    // If using Spock, need to depend on geb-spock
-    testCompile "org.gebish:geb-spock:$gebVersion"
-    testCompile("org.spockframework:spock-core:1.0-groovy-2.4") {
-        exclude group: "org.codehaus.groovy"
-    }
     testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
 
     // If using JUnit, need to depend on geb-junit (3 or 4)
@@ -41,7 +36,23 @@ dependencies {
         // phantomjs driver pulls in a different selenium version
         transitive = false
     }
+    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-edge-driver', version: '2.47.1'
+
+    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-ie-driver', version: '3.4.0'
+
+    testCompile (group: 'com.athaydes', name: 'spock-reports', version: '1.3.2'){
+        transitive = false
+    }
+    testCompile 'org.slf4j:slf4j-api:1.7.13'
+    testCompile 'org.slf4j:slf4j-simple:1.7.13'
+    testCompile ("org.gebish:geb-spock:$gebVersion") {
+        exclude group: "org.spockframework"
+    }
+    testCompile (group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4') {
+        exclude group: "org.codehaus.groovy"
+    }
 }
+
 
 drivers.each { driver ->
     task "${driver}Test"(type: Test) {
@@ -60,6 +71,11 @@ drivers.each { driver ->
     }
 }
 
+edgeTest {
+    def edgedriverFile = new File("MicrosoftWebDriver.exe")
+    systemProperty "webdriver.edge.driver", edgedriverFile.absolutePath
+}
+
 firefoxTest {
     dependsOn unzipGeckoDriver
     def geckodriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "geckodriver.exe" : "geckodriver"
@@ -73,6 +89,12 @@ chromeTest {
     def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
     systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
 }
+
+ieTest {
+    def ieDriverFile = new File("IEDriverServer.exe")
+    systemProperty "webdriver.ie.driver", ieDriverFile.absolutePath
+}
+
 
 phantomJsTest {
     dependsOn unzipPhantomJs
