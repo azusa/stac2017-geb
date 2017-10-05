@@ -10,6 +10,7 @@ import org.openqa.selenium.edge.EdgeDriver
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.phantomjs.PhantomJSDriver
+import org.openqa.selenium.chrome.ChromeOptions
 
 waiting {
 	timeout = 5
@@ -23,6 +24,13 @@ environments {
 		driver = { new ChromeDriver() }
 	}
 	
+	chromeHeadless {
+		driver = {
+			ChromeOptions o = new ChromeOptions()
+			o.addArguments('headless')
+			new ChromeDriver(o)
+		}
+	}
 	// run via “./gradlew firefoxTest”
 	// See: http://code.google.com/p/selenium/wiki/FirefoxDriver
 	firefox {
