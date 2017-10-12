@@ -17,42 +17,39 @@ waiting {
 }
 
 environments {
-	
-	// run via “./gradlew chromeTest”
-	// See: http://code.google.com/p/selenium/wiki/ChromeDriver
-	chrome {
-		driver = { new ChromeDriver() }
+
+	gebishorg {
+		baseUrl = "http://gebish.org"
 	}
-	
-	chromeHeadless {
+
+}
+
+switch (System.getProperty("browser")) {
+
+	case "chrome" :
+		driver = { new ChromeDriver() }
+		break
+	case "firefox" :
+		atCheckWaiting = 1
+		driver = { new FirefoxDriver() }
+		break
+	case "chromeHeadless" :
 		driver = {
 			ChromeOptions o = new ChromeOptions()
 			o.addArguments('headless')
 			new ChromeDriver(o)
 		}
-	}
-	// run via “./gradlew firefoxTest”
-	// See: http://code.google.com/p/selenium/wiki/FirefoxDriver
-	firefox {
-		atCheckWaiting = 1
-
-		driver = { new FirefoxDriver() }
-	}
-
-    phantomJs {
-        driver = { new PhantomJSDriver() }
-    }
-
-	edge {
+		break
+	case "edge" :
 		driver = { new EdgeDriver()}
-	}
-
-	ie {
+		break
+	case "ie" :
 		driver = { new InternetExplorerDriver() }
-	}
+		break
+	default :
+		throw new IllegalStateException()
 
 }
-
-// To run the tests with all browsers just run “./gradlew test”
-
 baseUrl = "http://gebish.org"
+
+

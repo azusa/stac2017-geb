@@ -1,21 +1,22 @@
+import geb.spock.GebReportingSpec
 import geb.spock.GebSpec
 
-class GebishOrgSpec extends GebSpec {
+class GebishOrgSpec extends GebReportingSpec {
 
-    def "can get to the current Book of Geb"() {
-        when:
+    def "Book of Gebの最新バージョンが表示できる"() {
+        when: "Gebのホームページを表示する"
         to GebishOrgHomePage
 
-        and:
+        and: "マニュアルのメニューを開く"
         manualsMenu.open()
 
-        then:
+        then: "currentのリンクがcurrentではじまっている"
         manualsMenu.links[0].text().startsWith("current")
 
-        when:
+        when: "リンクをクリックする"
         manualsMenu.links[0].click()
 
-        then:
+        then: "The Book Of Gebのページが表示される"
         at TheBookOfGebPage
     }
 }

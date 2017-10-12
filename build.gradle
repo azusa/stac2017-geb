@@ -2,7 +2,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 ext {
     // The drivers we want to use
-    drivers = ["firefox", "chrome", "phantomJs", "edge", "ie"]
+    drivers = ["firefox", "chrome", "phantomJs", "edge", "ie","chromeHeadless"]
 
     ext {
         groovyVersion = '2.4.8'
@@ -40,7 +40,8 @@ dependencies {
 
     testCompile group: 'org.seleniumhq.selenium', name: 'selenium-ie-driver', version: '3.4.0'
 
-    testCompile (group: 'com.athaydes', name: 'spock-reports', version: '1.3.2'){
+    testCompile (group: 'com.athaydes', name: 'spock-reports',
+     version: '1.3.2'){
         transitive = false
     }
     testCompile 'org.slf4j:slf4j-api:1.7.13'
@@ -51,8 +52,8 @@ dependencies {
     testCompile (group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4') {
         exclude group: "org.codehaus.groovy"
     }
+    testCompile "commons-io:commons-io:2.5"
 }
-
 
 drivers.each { driver ->
     task "${driver}Test"(type: Test) {
@@ -62,50 +63,37 @@ drivers.each { driver ->
         }
 
         outputs.upToDateWhen { false }  // Always run tests
-
+        systemProperty "browser", driver
         systemProperty "geb.build.reportsDir", reporting.file("$name/geb")
-        systemProperty "geb.env", driver
+        systemProperty "geb.env", target
 
-        // If you wanted to set the baseUrl in your build…
-        // systemProperty "geb.build.baseUrl", "http://myapp.com"
     }
 }
 
-edgeTest {
-    def edgedriverFile = new File("MicrosoftWebDriver.exe")
-    systemProperty "webdriver.edge.driver", edgedriverFile.absolutePath
-}
+    firefoxTest {
+        dependsOn unzipGeckoDriver
+        def geckodriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "geckodriver.exe" : "geckodriver"
+        def geckodriverFile = new File(unzipGeckoDriver.outputs.files.singleFile, geckodriverFilename)
+        systemProperty "webdriver.gecko.driver", geckodriverFile.absolutePath
+    }
 
-firefoxTest {
-    dependsOn unzipGeckoDriver
-    def geckodriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "geckodriver.exe" : "geckodriver"
-    def geckodriverFile = new File(unzipGeckoDriver.outputs.files.singleFile, geckodriverFilename)
-    systemProperty "webdriver.gecko.driver", geckodriverFile.absolutePath
-}
+    chromeTest {
+        dependsOn unzipChromeDriver
 
-chromeTest {
-    dependsOn unzipChromeDriver
+        def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
+        systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
+    }
 
-    def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
-    systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
-}
+    chromeHeadlessTest {
+        dependsOn unzipChromeDriver
 
-ieTest {
-    def ieDriverFile = new File("IEDriverServer.exe")
-    systemProperty "webdriver.ie.driver", ieDriverFile.absolutePath
-}
+        def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
+        systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
+    }
 
+    test {
+        dependsOn "${browser}Test"
+        enabled = false
+    }
 
-phantomJsTest {
-    dependsOn unzipPhantomJs
-
-    def phantomJsFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "phantomjs.exe" : "bin/phantomjs"
-    systemProperty "phantomjs.binary.path", new File(unzipPhantomJs.outputs.files.singleFile, phantomJsFilename).absolutePath
-}
-
-test {
-    dependsOn drivers.collect { tasks["${it}Test"] }
-    enabled = false
-}
-
-apply from: "gradle/ci.gradle"
+    apply from: "gradle/ci.gradle"
