@@ -21,6 +21,9 @@ environments {
 	gebishorg {
 		baseUrl = "http://gebish.org"
 	}
+	heroku {
+		baseUrl = "http://gebish.herokuapp.com"
+	}
 
 }
 
