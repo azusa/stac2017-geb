@@ -63,8 +63,11 @@ switch (targetBrowser) {
 }
 
 private void setUpChromeDriver(String buildDir) {
-	def chromedriverFilename = SystemUtils.IS_OS_WINDOWS ? "chromedriver.exe" : "chromedriver"
-	System.setProperty "webdriver.chrome.driver", "$buildDir/webdriver/chromedriver/$chromedriverFilename"
+	def chromedriverFilename =
+			SystemUtils.IS_OS_WINDOWS ?
+					"chromedriver.exe" : "chromedriver"
+	System.setProperty "webdriver.chrome.driver",
+			"$buildDir/webdriver/chromedriver/$chromedriverFilename"
 }
 
 baseUrl = "http://gebish.org"
