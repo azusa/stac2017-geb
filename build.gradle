@@ -67,7 +67,7 @@ drivers.each { driver ->
         outputs.upToDateWhen { false }  // Always run tests
         systemProperty "browser", driver
         systemProperty "geb.env", target
-        systemProperty "buildDir". $buildDir
+        systemProperty "buildDir", "$buildDir"
 
     }
 }

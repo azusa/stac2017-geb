@@ -52,9 +52,13 @@ switch (targetBrowser) {
 		}
 		break
 	case "edge" :
+		def edgedriverFile = new File("MicrosoftWebDriver.exe")
+		System.setProperty "webdriver.edge.driver", edgedriverFile.absolutePath
 		driver = { new EdgeDriver()}
 		break
 	case "ie" :
+		def ieDriverFile = new File("IEDriverServer.exe")
+		System.setProperty "webdriver.ie.driver", ieDriverFile.absolutePath
 		driver = { new InternetExplorerDriver() }
 		break
 	default :
