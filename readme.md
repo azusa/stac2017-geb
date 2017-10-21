@@ -1,32 +1,18 @@
-# Example Geb and Gradle Project
+[技術書典3](https://techbookfest.org/event/tbf03)で頒布した[すいーとみゅーじっく vol.4](http://pub.fieldnotes.jp/entry/sweetmusic-vol4) のサンプルコードです。
 
-[![Build Status][build_status]](https://gitlab.com/gebish/geb-example-gradle/pipelines)
-
-## Description
-
-This is an example of incorporating Geb into a Gradle build. It shows the use of Spock and JUnit 4 tests.
-
-The build is setup to work with Firefox, Chrome and PhantomJS. Have a look at the `build.gradle` and the `src/test/resources/GebConfig.groovy` files.
+[geb/geb-example-gradle](https://github.com/geb/geb-example-gradle)からフォークしたものです。
 
 ## Usage
 
-The following commands will launch the tests with the individual browsers:
+ブラウザーごとのテスト実行方法は以下の通りです。デフォルトはChromeです。
 
-    ./gradlew chromeTest
-    ./gradlew firefoxTest
-    ./gradlew phantomJsTest
+    ./gradlew test -Pbrowser=chrome
+    ./gradlew test -Pbrowser=chromeHeadless
+    ./gradlew test -Pbrowser=firefox
+    ./gradlew test -Pbrowser=ie
+    ./gradlew test -Pbrowser=edge
 
-To run with all, you can run:
+テストの実行時にシステムプロパティー`geb.env`を切り替える場合は、以下の通り実行します。
 
-    ./gradlew test
+    gradlew test -Ptarget=heroku
 
-Replace `./gradlew` with `gradlew.bat` in the above examples if you're on Windows.
-
-## Questions and issues
-
-Please ask questions on [Geb user mailing list][mailing_list] and raise issues in [Geb issue tracker][issue_tracker].
-
-
-[build_status]: https://gitlab.com/gebish/geb-example-gradle/badges/master/build.svg "Build Status"
-[mailing_list]: https://groups.google.com/forum/#!forum/geb-user
-[issue_tracker]: https://github.com/geb/issues/issues
