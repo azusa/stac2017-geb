@@ -4,7 +4,11 @@
 	See: http://www.gebish.org/manual/current/#configuration
 */
 
-import org.apache.commons.lang3.SystemUtils
+
+import io.github.bonigarcia.wdm.ChromeDriverManager
+import io.github.bonigarcia.wdm.EdgeDriverManager
+import io.github.bonigarcia.wdm.FirefoxDriverManager
+import io.github.bonigarcia.wdm.InternetExplorerDriverManager
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.edge.EdgeDriver
@@ -34,17 +38,16 @@ environments {
 switch (targetBrowser) {
 
 	case "chrome" :
+		ChromeDriverManager.getInstance().setup()
 		driver = { new ChromeDriver() }
-		setUpChromeDriver(BUILD_DIR)
 		break
 	case "firefox" :
 		atCheckWaiting = 1
-		def geckodriverFilename = SystemUtils.IS_OS_WINDOWS ? "geckodriver.exe" : "geckodriver"
-		System.setProperty "webdriver.gecko.driver", "$BUILD_DIR/webdriver/geckodriver/$geckodriverFilename"
+		FirefoxDriverManager.getInstance().setup();
 		driver = { new FirefoxDriver() }
 		break
 	case "chromeHeadless" :
-		setUpChromeDriver(BUILD_DIR)
+		ChromeDriverManager.getInstance().setup()
 		driver = {
 			ChromeOptions o = new ChromeOptions()
 			o.addArguments('headless')
@@ -52,13 +55,11 @@ switch (targetBrowser) {
 		}
 		break
 	case "edge" :
-		def edgedriverFile = new File("MicrosoftWebDriver.exe")
-		System.setProperty "webdriver.edge.driver", edgedriverFile.absolutePath
+		EdgeDriverManager.getInstance().setup()
 		driver = { new EdgeDriver()}
 		break
 	case "ie" :
-		def ieDriverFile = new File("IEDriverServer.exe")
-		System.setProperty "webdriver.ie.driver", ieDriverFile.absolutePath
+		InternetExplorerDriverManager.getInstance().setup()
 		driver = { new InternetExplorerDriver() }
 		break
 	default :
@@ -66,13 +67,6 @@ switch (targetBrowser) {
 
 }
 
-private void setUpChromeDriver(String buildDir) {
-	def chromedriverFilename =
-			SystemUtils.IS_OS_WINDOWS ?
-					"chromedriver.exe" : "chromedriver"
-	System.setProperty "webdriver.chrome.driver",
-			"$buildDir/webdriver/chromedriver/$chromedriverFilename"
-}
 
 baseUrl = "http://gebish.org"
 
