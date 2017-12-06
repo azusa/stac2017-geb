@@ -6,10 +6,10 @@ ext {
 
     ext {
         groovyVersion = '2.4.8'
-        gebVersion = '1.1.1'
-        seleniumVersion = '3.4.0'
-        chromeDriverVersion = '2.29'
-        geckoDriverVersion = '0.16.1'
+        gebVersion = '2.0'
+        seleniumVersion = '3.8.1'
+        chromeDriverVersion = '2.33'
+        geckoDriverVersion = '0.19.1'
         phantomJsVersion = '2.1.1'
     }
 }
@@ -51,8 +51,9 @@ dependencies {
         exclude group: "org.spockframework"
     }
     testCompile (group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4') {
-        exclude group: "org.codehaus.groovy"
+        exclude group: "org.codehaus.groovy" 
     }
+
     testCompile group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
 
 }
