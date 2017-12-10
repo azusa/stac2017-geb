@@ -11,8 +11,7 @@ import io.github.bonigarcia.wdm.FirefoxDriverManager
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
-import org.openqa.selenium.edge.EdgeDriver
-import org.openqa.selenium.firefox.FirefoxDriver
+
 import org.openqa.selenium.ie.InternetExplorerDriver
 
 def targetBrowser = System.getProperty("browser") == null ? "chrome" :  System.getProperty("browser")
@@ -39,12 +38,12 @@ switch (targetBrowser) {
 
 	case "chrome" :
 		ChromeDriverManager.getInstance().setup()
-		driver = { new ChromeDriver() }
+		driver = "org.openqa.selenium.chrome.ChromeDriver"
 		break
 	case "firefox" :
 		atCheckWaiting = 1
 		FirefoxDriverManager.getInstance().setup();
-		driver = { new FirefoxDriver() }
+		driver = "org.openqa.selenium.firefox.FirefoxDriver"
 		break
 	case "chromeHeadless" :
 		ChromeDriverManager.getInstance().setup()
@@ -56,7 +55,7 @@ switch (targetBrowser) {
 		break
 	case "edge" :
 		EdgeDriverManager.getInstance().setup()
-		driver = { new EdgeDriver()}
+		driver = "org.openqa.selenium.edge.EdgeDriver"
 		break
 	case "ie" :
 		InternetExplorerDriverManager.getInstance().setup()

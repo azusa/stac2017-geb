@@ -18,5 +18,6 @@ class GebishOrgSpec extends GebReportingSpec {
 
         then: "The Book Of Gebのページが表示される"
         at TheBookOfGebPage
+
     }
 }

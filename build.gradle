@@ -10,13 +10,11 @@ ext {
         seleniumVersion = '3.8.1'
         chromeDriverVersion = '2.33'
         geckoDriverVersion = '0.19.1'
-        phantomJsVersion = '2.1.1'
     }
 }
 
 apply plugin: "groovy"
 apply from: "gradle/idea.gradle"
-apply from: "gradle/osSpecificDownloads.gradle"
 
 
 repositories {
@@ -31,12 +29,6 @@ dependencies {
 
     // Drivers
     testCompile "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
-    testCompile "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
-    // using a custom version of phantomjs driver for now as the original one does not support WebDriver > 2.43.1
-    testCompile("com.codeborne:phantomjsdriver:1.4.3") {
-        // phantomjs driver pulls in a different selenium version
-        transitive = false
-    }
     testCompile group: 'org.seleniumhq.selenium', name: 'selenium-edge-driver', version: '2.47.1'
 
     testCompile group: 'org.seleniumhq.selenium', name: 'selenium-ie-driver', version: '3.4.0'
@@ -76,18 +68,6 @@ drivers.each { driver ->
     }
 }
 
-    firefoxTest {
-        dependsOn unzipGeckoDriver
-
-    }
-
-    chromeTest {
-        dependsOn unzipChromeDriver
-    }
-
-    chromeHeadlessTest {
-        dependsOn unzipChromeDriver
-    }
 
     test {
         dependsOn "${browser}Test"
